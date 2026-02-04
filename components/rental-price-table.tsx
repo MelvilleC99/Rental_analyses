@@ -40,7 +40,9 @@ export function RentalPriceTable({ data, selectedPropertyType, onPropertyTypeCha
       const marPrice = getPrice(mar, selectedPropertyType)
       const novPrice = getPrice(nov, selectedPropertyType)
 
-      const changeAugToNov = augPrice ? Math.round(((novPrice - augPrice) / augPrice) * 100) : 0
+      // If price went from something to 0, exclude from change calculation
+      const hasValidChange = !(augPrice > 0 && novPrice === 0)
+      const changeAugToNov = hasValidChange && augPrice ? Math.round(((novPrice - augPrice) / augPrice) * 100) : null
 
       return {
         suburb,
@@ -51,9 +53,11 @@ export function RentalPriceTable({ data, selectedPropertyType, onPropertyTypeCha
       }
     })
 
-    const avgAug = Math.round(rows.reduce((sum, row) => sum + row.august, 0) / rows.length)
-    const avgMar = Math.round(rows.reduce((sum, row) => sum + row.march, 0) / rows.length)
-    const avgNov = Math.round(rows.reduce((sum, row) => sum + row.november, 0) / rows.length)
+    // Only include rows with valid changes in average calculation
+    const validRows = rows.filter(row => row.change !== null)
+    const avgAug = validRows.length > 0 ? Math.round(validRows.reduce((sum, row) => sum + row.august, 0) / validRows.length) : 0
+    const avgMar = validRows.length > 0 ? Math.round(validRows.reduce((sum, row) => sum + row.march, 0) / validRows.length) : 0
+    const avgNov = validRows.length > 0 ? Math.round(validRows.reduce((sum, row) => sum + row.november, 0) / validRows.length) : 0
     const avgChangeAugToNov = avgAug ? Math.round(((avgNov - avgAug) / avgAug) * 100) : 0
 
     return {
@@ -67,7 +71,8 @@ export function RentalPriceTable({ data, selectedPropertyType, onPropertyTypeCha
     }
   }, [data, selectedPropertyType])
 
-  const formatChange = (change) => {
+  const formatChange = (change: number | null) => {
+    if (change === null) return "-"
     const sign = change > 0 ? "+" : ""
     return `${sign}${change}%`
   }
@@ -112,7 +117,7 @@ export function RentalPriceTable({ data, selectedPropertyType, onPropertyTypeCha
                   <TableCell className="text-right">R{row.august.toLocaleString()}</TableCell>
                   <TableCell className="text-right">R{row.march.toLocaleString()}</TableCell>
                   <TableCell className="text-right">R{row.november.toLocaleString()}</TableCell>
-                  <TableCell className={`text-right font-medium ${row.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                  <TableCell className={`text-right font-medium ${row.change === null ? "" : row.change <= 0 ? "text-green-600" : "text-red-600"}`}>
                     {formatChange(row.change)}
                   </TableCell>
                 </TableRow>
@@ -122,7 +127,7 @@ export function RentalPriceTable({ data, selectedPropertyType, onPropertyTypeCha
                 <TableCell className="text-right">R{averagePrice.august.toLocaleString()}</TableCell>
                 <TableCell className="text-right">R{averagePrice.march.toLocaleString()}</TableCell>
                 <TableCell className="text-right">R{averagePrice.november.toLocaleString()}</TableCell>
-                <TableCell className={`text-right ${averagePrice.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                <TableCell className={`text-right ${averagePrice.change <= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatChange(averagePrice.change)}
                 </TableCell>
               </TableRow>

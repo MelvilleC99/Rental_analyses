@@ -62,7 +62,7 @@ export function RentalCountTable({ data, selectedPropertyType, onPropertyTypeCha
   }, [data, selectedPropertyType])
 
   const formatChange = (change) => {
-    const color = change < 0 ? "text-green-600" : "text-red-600"
+    const color = change >= 0 ? "text-green-600" : "text-red-600"
     const sign = change > 0 ? "+" : ""
     return `${sign}${change}%`
   }
@@ -107,7 +107,7 @@ export function RentalCountTable({ data, selectedPropertyType, onPropertyTypeCha
                   <TableCell className="text-right">{row.august}</TableCell>
                   <TableCell className="text-right">{row.march}</TableCell>
                   <TableCell className="text-right">{row.november}</TableCell>
-                  <TableCell className={`text-right font-medium ${row.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                  <TableCell className={`text-right font-medium ${row.change <= 0 ? "text-red-600" : "text-green-600"}`}>
                     {formatChange(row.change)}
                   </TableCell>
                 </TableRow>
@@ -117,7 +117,7 @@ export function RentalCountTable({ data, selectedPropertyType, onPropertyTypeCha
                 <TableCell className="text-right">{totalCount.august}</TableCell>
                 <TableCell className="text-right">{totalCount.march}</TableCell>
                 <TableCell className="text-right">{totalCount.november}</TableCell>
-                <TableCell className={`text-right ${totalCount.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                <TableCell className={`text-right ${totalCount.change <= 0 ? "text-red-600" : "text-green-600"}`}>
                   {formatChange(totalCount.change)}
                 </TableCell>
               </TableRow>

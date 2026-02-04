@@ -61,7 +61,7 @@ export function AirbnbCountCard({ data }) {
                   <TableCell className="font-medium">{row.name}</TableCell>
                   <TableCell className="text-right">{row.august}</TableCell>
                   <TableCell className="text-right">{row.september}</TableCell>
-                  <TableCell className={`text-right font-medium ${row.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                  <TableCell className={`text-right font-medium ${row.change <= 0 ? "text-green-600" : "text-red-600"}`}>
                     {formatChange(row.change)}
                   </TableCell>
                 </TableRow>
@@ -70,7 +70,7 @@ export function AirbnbCountCard({ data }) {
                 <TableCell>Total</TableCell>
                 <TableCell className="text-right">{totalCount.august}</TableCell>
                 <TableCell className="text-right">{totalCount.september}</TableCell>
-                <TableCell className={`text-right ${totalCount.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                <TableCell className={`text-right ${totalCount.change <= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatChange(totalCount.change)}
                 </TableCell>
               </TableRow>

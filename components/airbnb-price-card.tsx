@@ -65,7 +65,7 @@ export function AirbnbPriceCard({ data }) {
                   <TableCell className="text-right">
                     R{row.september.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </TableCell>
-                  <TableCell className={`text-right font-medium ${row.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                  <TableCell className={`text-right font-medium ${row.change >= 0 ? "text-green-600" : "text-red-600"}`}>
                     {formatChange(row.change)}
                   </TableCell>
                 </TableRow>
@@ -74,7 +74,7 @@ export function AirbnbPriceCard({ data }) {
                 <TableCell>Average</TableCell>
                 <TableCell className="text-right">R{averagePrice.august.toLocaleString()}</TableCell>
                 <TableCell className="text-right">R{averagePrice.september.toLocaleString()}</TableCell>
-                <TableCell className={`text-right ${averagePrice.change < 0 ? "text-green-600" : "text-red-600"}`}>
+                <TableCell className={`text-right ${averagePrice.change >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatChange(averagePrice.change)}
                 </TableCell>
               </TableRow>
